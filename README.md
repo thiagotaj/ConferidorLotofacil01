@@ -1,0 +1,2 @@
+# ConferidorLotofacil01
+CONFERIR JOGOS OFFOLINE
