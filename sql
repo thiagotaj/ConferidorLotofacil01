@@ -1,0 +1,20 @@
+CREATE TABLE jogos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    numero1 INT NOT NULL,
+    numero2 INT NOT NULL,
+    numero3 INT NOT NULL,
+    numero4 INT NOT NULL,
+    numero5 INT NOT NULL,
+    numero6 INT NOT NULL,
+    numero7 INT NOT NULL,
+    numero8 INT NOT NULL,
+    numero9 INT NOT NULL,
+    numero10 INT NOT NULL,
+    numero11 INT NOT NULL,
+    numero12 INT NOT NULL,
+    numero13 INT NOT NULL,
+    numero14 INT NOT NULL,
+    numero15 INT NOT NULL,
+    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

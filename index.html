@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Conferidor Lotofácil</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px #ccc;
+        }
+
+        h1 {
+            text-align: center;
+            color: #6a1b9a;
+        }
+
+        h2 {
+            color: #444;
+            margin-top: 30px;
+        }
+
+        .cartela {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+
+        .numero {
+            height: 55px;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 18px;
+            font-weight: bold;
+
+            cursor: pointer;
+
+            background: #eee;
+        }
+
+        .numero.selecionado {
+            background: #6a1b9a;
+            color: white;
+            border-color: #6a1b9a;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+
+            border: none;
+            border-radius: 8px;
+
+            background: #6a1b9a;
+            color: white;
+
+            font-size: 17px;
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #4a126d;
+        }
+
+        .jogo {
+            background: #f5f5f5;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 8px;
+        }
+
+        .resultado {
+            margin-top: 20px;
+        }
+
+        .acerto {
+            color: green;
+            font-weight: bold;
+        }
+
+        .erro {
+            color: red;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🍀 Conferidor Lotofácil</h1>
+
+
+    <!-- CADASTRAR JOGO -->
+
+    <h2>🎯 Cadastrar jogo</h2>
+
+    <p>
+        Selecione 15 números:
+    </p>
+
+    <div id="cartelaJogo" class="cartela"></div>
+
+    <p>
+        Selecionados:
+        <strong id="contadorJogo">0</strong> / 15
+    </p>
+
+    <button onclick="salvarJogo()">
+        💾 SALVAR JOGO
+    </button>
+
+
+    <!-- JOGOS SALVOS -->
+
+    <h2>📋 Meus jogos</h2>
+
+    <div id="listaJogos"></div>
+
+
+    <!-- SORTEIO -->
+
+    <h2>🎲 Resultado do sorteio</h2>
+
+    <p>
+        Selecione os 15 números sorteados:
+    </p>
+
+    <div id="cartelaSorteio" class="cartela"></div>
+
+    <p>
+        Selecionados:
+        <strong id="contadorSorteio">0</strong> / 15
+    </p>
+
+    <button onclick="conferirJogos()">
+        🔎 CONFERIR JOGOS
+    </button>
+
+
+    <!-- RESULTADO -->
+
+    <div id="resultado" class="resultado"></div>
+
+</div>
+
+
+<script>
+
+let jogoSelecionado = [];
+
+let sorteioSelecionado = [];
+
+let jogosSalvos =
+    JSON.parse(localStorage.getItem("jogosLotofacil")) || [];
+
+
+// CRIAR CARTELA DO JOGO
+
+function criarCartelaJogo() {
+
+    const cartela =
+        document.getElementById("cartelaJogo");
+
+    for (let numero = 1; numero <= 25; numero++) {
+
+        const botao =
+            document.createElement("div");
+
+        botao.className = "numero";
+
+        botao.textContent =
+            String(numero).padStart(2, "0");
+
+        botao.onclick = function () {
+
+            selecionarNumero(
+                numero,
+                jogoSelecionado,
+                botao,
+                "contadorJogo"
+            );
+
+        };
+
+        cartela.appendChild(botao);
+    }
+}
+
+
+// CRIAR CARTELA DO SORTEIO
+
+function criarCartelaSorteio() {
+
+    const cartela =
+        document.getElementById("cartelaSorteio");
+
+    for (let numero = 1; numero <= 25; numero++) {
+
+        const botao =
+            document.createElement("div");
+
+        botao.className = "numero";
+
+        botao.textContent =
+            String(numero).padStart(2, "0");
+
+        botao.onclick = function () {
+
+            selecionarNumero(
+                numero,
+                sorteioSelecionado,
+                botao,
+                "contadorSorteio"
+            );
+
+        };
+
+        cartela.appendChild(botao);
+    }
+}
+
+
+// SELECIONAR NÚMERO
+
+function selecionarNumero(
+    numero,
+    lista,
+    botao,
+    contadorId
+) {
+
+    const posicao =
+        lista.indexOf(numero);
+
+
+    if (posicao === -1) {
+
+        if (lista.length >= 15) {
+
+            alert(
+                "Você pode selecionar somente 15 números."
+            );
+
+            return;
+        }
+
+        lista.push(numero);
+
+        botao.classList.add("selecionado");
+
+    } else {
+
+        lista.splice(posicao, 1);
+
+        botao.classList.remove("selecionado");
+    }
+
+
+    document.getElementById(contadorId)
+        .textContent = lista.length;
+}
+
+
+// SALVAR JOGO
+
+function salvarJogo() {
+
+    if (jogoSelecionado.length !== 15) {
+
+        alert(
+            "Selecione exatamente 15 números."
+        );
+
+        return;
+    }
+
+
+    const numeros =
+        [...jogoSelecionado].sort(
+            (a, b) => a - b
+        );
+
+
+    jogosSalvos.push(numeros);
+
+
+    localStorage.setItem(
+        "jogosLotofacil",
+        JSON.stringify(jogosSalvos)
+    );
+
+
+    alert("Jogo salvo com sucesso!");
+
+
+    jogoSelecionado = [];
+
+
+    document.getElementById(
+        "contadorJogo"
+    ).textContent = "0";
+
+
+    document.getElementById(
+        "cartelaJogo"
+    ).innerHTML = "";
+
+
+    criarCartelaJogo();
+
+    mostrarJogos();
+}
+
+
+// MOSTRAR JOGOS
+
+function mostrarJogos() {
+
+    const lista =
+        document.getElementById(
+            "listaJogos"
+        );
+
+    lista.innerHTML = "";
+
+
+    if (jogosSalvos.length === 0) {
+
+        lista.innerHTML =
+            "<p>Nenhum jogo cadastrado.</p>";
+
+        return;
+    }
+
+
+    jogosSalvos.forEach(
+        function(jogo, indice) {
+
+            const div =
+                document.createElement("div");
+
+            div.className = "jogo";
+
+
+            const numeros =
+                jogo
+                .map(
+                    numero =>
+                    String(numero).padStart(2, "0")
+                )
+                .join(" - ");
+
+
+            div.innerHTML =
+                "<strong>Jogo " +
+                (indice + 1) +
+                "</strong><br>" +
+                numeros;
+
+
+            lista.appendChild(div);
+        }
+    );
+}
+
+
+// CONFERIR TODOS OS JOGOS
+
+function conferirJogos() {
+
+    if (sorteioSelecionado.length !== 15) {
+
+        alert(
+            "Selecione exatamente 15 números sorteados."
+        );
+
+        return;
+    }
+
+
+    if (jogosSalvos.length === 0) {
+
+        alert(
+            "Você ainda não cadastrou nenhum jogo."
+        );
+
+        return;
+    }
+
+
+    const resultado =
+        document.getElementById("resultado");
+
+
+    resultado.innerHTML =
+        "<h2>🏆 Resultado</h2>";
+
+
+    jogosSalvos.forEach(
+        function(jogo, indice) {
+
+            let acertos =
+                jogo.filter(
+                    numero =>
+                    sorteioSelecionado
+                    .includes(numero)
+                );
+
+
+            const div =
+                document.createElement("div");
+
+
+            div.className = "jogo";
+
+
+            div.innerHTML =
+                "<strong>Jogo " +
+                (indice + 1) +
+                "</strong><br>" +
+
+                "Acertos: " +
+
+                "<span class='acerto'>" +
+                acertos.length +
+                "</span><br><br>" +
+
+                "Números acertados: " +
+
+                acertos
+                .map(
+                    numero =>
+                    String(numero).padStart(2, "0")
+                )
+                .join(" - ");
+
+
+            resultado.appendChild(div);
+        }
+    );
+}
+
+
+// INICIAR
+
+criarCartelaJogo();
+
+criarCartelaSorteio();
+
+mostrarJogos();
+
+</script>
+
+</body>
+
+</html>

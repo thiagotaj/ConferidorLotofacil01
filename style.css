@@ -1,0 +1,146 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+    margin: 0;
+    padding: 30px;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px #ccc;
+}
+
+h1 {
+    text-align: center;
+    color: #6a1b9a;
+}
+
+h2 {
+    color: #444;
+    margin-top: 30px;
+}
+
+.instrucao {
+    text-align: center;
+    font-size: 18px;
+}
+
+
+/* CARTELA */
+
+.cartela {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-top: 15px;
+}
+
+
+/* ESCONDE O CHECKBOX */
+
+.numero input {
+    display: none;
+}
+
+
+/* BOLINHA DO NÚMERO */
+
+.numero span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 55px;
+
+    background: #eeeeee;
+
+    border: 2px solid #cccccc;
+
+    border-radius: 50%;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+
+/* QUANDO SELECIONADO */
+
+.numero input:checked + span {
+    background: #6a1b9a;
+
+    color: white;
+
+    border-color: #6a1b9a;
+
+    transform: scale(1.05);
+}
+
+
+/* CONTADOR */
+
+#contador {
+    text-align: center;
+
+    font-size: 18px;
+
+    margin-top: 20px;
+}
+
+
+/* BOTÃO */
+
+button {
+    width: 100%;
+
+    padding: 16px;
+
+    margin-top: 30px;
+
+    background: #6a1b9a;
+
+    color: white;
+
+    border: none;
+
+    border-radius: 8px;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+button:hover {
+    background: #4a126d;
+}
+
+
+/* RESPONSIVO */
+
+@media (max-width: 600px) {
+
+    .container {
+        padding: 20px;
+    }
+
+    .cartela {
+        gap: 7px;
+    }
+
+    .numero span {
+        height: 45px;
+
+        font-size: 15px;
+    }
+
+}
